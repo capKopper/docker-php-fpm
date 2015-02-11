@@ -18,6 +18,8 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 ADD files/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 # Templates files
 ADD files/php-fpm-pool.tpl /tmp/tpl/
+# (https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-14-04)
+RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 # Add init script
 ADD files/init.sh /init.sh
