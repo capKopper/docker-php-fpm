@@ -2,8 +2,8 @@
 set -eo pipefail
 
 _log(){
-  declare BLUE="\e[32m" WHITE="\e[39m"
-  echo -e "$(date --iso-8601=s)${BLUE} (info)${WHITE}:" $@
+  declare BLUE="\e[32m" WHITE="\e[39m" BOLD="\e[1m" NORMAL="\e[0m"
+  echo -e "$(date --iso-8601=s)${BLUE}${BOLD} (info)${WHITE}:" $@${NORMAL}
 }
 
 _error(){
