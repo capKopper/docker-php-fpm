@@ -38,7 +38,7 @@ check_user(){
   _log "Checking that user '$username' exists ..."
   if [ $(grep -c $username /etc/passwd) == "0" ]; then
     _debug "create user '$username'"
-    useradd -u $uid -s /bin/bash $1
+    useradd -m -u $uid -s /bin/bash $1
   fi
 }
 
