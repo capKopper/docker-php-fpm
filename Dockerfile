@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 # Install tools
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get install runit -y
+RUN apt-get install runit git -y
 
 # Install php and dependencies
 ENV PHP_VERSION 5
