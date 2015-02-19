@@ -143,6 +143,21 @@ activate_service(){
   fi
 }
 
+run_pre-scripts(){
+  # """
+  # Run some bash scripts before starting runit.
+  # """
+  local scripts_pattern=$1
+  shift
+  local args=$@
+
+  _log "Running pre-scripts..."
+  for script in $(ls $scripts_pattern); do
+    _debug "=> execute '$script' script"
+    /bin/bash $script $args
+  done
+}
+
 start_runit(){
   # """
   # Start runit.
@@ -163,6 +178,7 @@ main(){
   configure_php_cli
   configure_runit $1
   activate_service "php-fpm"
+  run_pre-scripts "/init.d/pre-*.sh" $@
   start_runit
 }
 

@@ -23,7 +23,8 @@ RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 # Add init script
 ADD files/init.sh /init.sh
-RUN chmod u+x /init.sh
+RUN chmod u+x /init.sh && \
+    mkdir /init.d
 
 EXPOSE 9000
 ENTRYPOINT ["/init.sh"]
