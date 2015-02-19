@@ -40,6 +40,7 @@ check_user(){
     _debug "create user '$username'"
     useradd -m -u $uid -s /bin/bash $1
   fi
+  chown $1:$1 /home/$1 && chmod 750 /home/$1
 }
 
 check_php_fpm_logdir(){
