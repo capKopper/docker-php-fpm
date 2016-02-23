@@ -6,6 +6,7 @@ pm.max_children = 5
 pm.min_spare_servers = 1
 pm.max_spare_servers = 3
 pm.start_servers = 2
+pm.max_requests = 200
 pm.status_path = /status
 
 ping.path = /ping
