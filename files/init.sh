@@ -72,7 +72,7 @@ generate_php_fpm_pool(){
   local pool_tpl="/tmp/tpl/php-fpm-pool.tpl"
   local pool_dir="/etc/php5/fpm/pool.d"
   local max_exec_time=${PHP_FPM_MAX_EXECUTION_TIME:-30}
-  local memory_limit=${PHP_FPM_MEMORY_LIMIT:-128M}
+  local memory_limit=${PHP_FPM_MEMORY_LIMIT:-196M}
 
   _log "Generate php-fpm customer pool ..."
 
