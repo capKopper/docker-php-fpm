@@ -67,12 +67,16 @@ generate_php_fpm_pool(){
   # Some environments variables can be used to defined specific configuration.
   # - PHP_FPM_MAX_EXECUTION_TIME : maximum execution time for a php process
   # - PHP_FPM_MEMORY_LIMIT : php memory limit
+  # - PHP_FPM_POST_MAX_SIZE: maximum size of data received from a POST request
+  # - PHP_FPM_UPLOAD_MAX_FILESIZE: maximum size of a file to download
   # """
   local username=$1
   local pool_tpl="/tmp/tpl/php-fpm-pool.tpl"
   local pool_dir="/etc/php5/fpm/pool.d"
   local max_exec_time=${PHP_FPM_MAX_EXECUTION_TIME:-30}
   local memory_limit=${PHP_FPM_MEMORY_LIMIT:-196M}
+  local post_max_size=${PHP_FPM_POST_MAX_SIZE:-30M}
+  local upload_max_filesize=${PHP_FPM_UPLOAD_MAX_FILESIZE:-24M}
 
   _log "Generate php-fpm customer pool ..."
 
@@ -82,9 +86,13 @@ generate_php_fpm_pool(){
   _debug "generate '$username' pool from template file ($pool_tpl)"
   _debug "=> max_execution_time set to: $max_exec_time"
   _debug "=> memory_limit set to: $memory_limit"
+  _debug "=> post_max_size set to: $post_max_size"
+  _debug "=> upload_max_filesize set to: $upload_max_filesize"
   sed -e 's/{{ CUSTOMER }}/'$username'/g' \
       -e 's/{{ PHP_FPM_MAX_EXECUTION_TIME }}/'$max_exec_time'/g' \
       -e 's/{{ PHP_FPM_MEMORY_LIMIT }}/'$memory_limit'/g' \
+      -e 's/{{ PHP_FPM_POST_MAX_SIZE }}/'$post_max_size'/g' \
+      -e 's/{{ PHP_FPM_UPLOAD_MAX_FILESIZE }}/'$upload_max_filesize'/g' \
       $pool_tpl > /etc/php5/fpm/pool.d/$username.conf
 }
 
