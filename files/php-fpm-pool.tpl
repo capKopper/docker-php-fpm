@@ -2,10 +2,10 @@
 listen = 0.0.0.0:9000
 
 pm = dynamic
-pm.max_children = 5
+pm.max_children = 4
 pm.min_spare_servers = 1
-pm.max_spare_servers = 3
-pm.start_servers = 2
+pm.max_spare_servers = 2
+pm.start_servers = 1
 pm.max_requests = 200
 pm.status_path = /status
 
