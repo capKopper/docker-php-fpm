@@ -7,6 +7,14 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt-get install runit git wget unzip -y
 
+# Install consul-template
+ENV CT_VERSION 0.14.0
+RUN cd /tmp && \
+    wget https://releases.hashicorp.com/consul-template/${CT_VERSION}/consul-template_${CT_VERSION}_linux_amd64.zip && \
+    unzip consul-template_${CT_VERSION}_linux_amd64.zip -d /usr/local/bin && \
+    chmod +x /usr/local/bin/consul-template && \
+    rm -fr consul-template_${CT_VERSION}_linux_amd64.zip
+
 # Install php and dependencies
 ENV PHP_VERSION 5
 RUN apt-get update && \
