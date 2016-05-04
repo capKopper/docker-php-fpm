@@ -19,6 +19,8 @@ echo "➜ Running project 'client' pre-start actions in folder '{{ $project_root
 echo "  - actions get from Consul are:"
 echo "    {{ $project_client_prestart_actions }}"
 echo ""
+# move to the project root folder
 cd {{ $project_root }}
+# execute client commands
 su -c "{{ $project_client_prestart_actions }}" {{ env "FPM_USER" }}
 {{ end }}
