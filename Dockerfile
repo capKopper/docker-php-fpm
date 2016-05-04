@@ -5,7 +5,7 @@ ENV CONTAINER_VERSION 2016050401
 # Install tools
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get install runit git -y
+RUN apt-get install runit git wget unzip -y
 
 # Install php and dependencies
 ENV PHP_VERSION 5
