@@ -169,6 +169,33 @@ activate_service(){
   fi
 }
 
+get_custom_php_actions(){
+  # """
+  # Get custom pre-start php actions for the PROJECT
+  # and generate a bash script into /init.d/
+  # """
+  _log "Getting custom pre-start php actions..."
+
+  # Check if CONSUL_CONNECT is set
+  if [ -z "${CONSUL_CONNECT}" ]; then
+    _warning "CONSUL_CONNECT environment variable is not set."
+
+  else
+    ctargs="${ctargs} -consul ${CONSUL_CONNECT}"
+
+    check_consul_connect
+
+    if [ "$?" == "0" ]; then
+      _debug "generating custom pre-start php actions script..."
+      consul-template -log-level ${CONSUL_LOGLEVEL} \
+                      -retry=2s \
+                      -once \
+                      -template "/consul-template/templates/actions.sh.ctmpl:/init.d/pre-99-custom-actions.sh" \
+                      ${ctargs}
+    fi
+  fi
+}
+
 run_pre-scripts(){
   # """
   # Run some bash scripts before starting runit.
@@ -209,6 +236,7 @@ main(){
   configure_php_cli
   configure_runit
   activate_service "php-fpm"
+  get_custom_php_actions
   run_pre-scripts "/init.d/pre-*.sh" $@
   start_runit
 }
