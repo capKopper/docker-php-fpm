@@ -5,12 +5,32 @@
 # load library
 source /scripts/logging.lib.sh
 
-usage(){
+function usage(){
+cat <<USAGE
+  init.sh <username> <uid>      Start a php-fpm server running with the given <username>/<uid>.
+
+Configure using the following environment variables:
+
+Project vars:
+  PROJECT                       Set the project id
+                                (default not set)
+
+Consul vars:
+  CONSUL_LOGLEVEL               Set the consul-template log level
+                                (default info)
+
+  CONSUL_CONNECT                URI for Consul agent
+                                (default not set)
+
+Checks vars:
+  CHECK_CONSUL_CONNECT          Check if the Consul agent is available
+                                (default not set)
+
+  CHECK_CONSUL_CONNECT_TIMEOUT  Consul agent connection check timeout in seconds
+                                (default 120)
+USAGE
   # """
-  # Usage.
   # """
-  echo "Usage: init.sh <username> <uid>"
-  exit 1
 }
 
 check_user(){
@@ -160,6 +180,7 @@ start_runit(){
 main(){
   if [ $# -ne 2 ]; then
     usage
+    exit 1
   else
     FPM_USER=$1
     FPM_USER_UID=$2
