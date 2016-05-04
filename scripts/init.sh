@@ -32,8 +32,21 @@ Checks vars:
   CHECK_CONSUL_CONNECT_TIMEOUT  Consul agent connection check timeout in seconds
                                 (default 120)
 USAGE
+}
+
+check_consul_connect() {
   # """
+  # Check the Consul connexion.
   # """
+  if [ -n "${CHECK_CONSUL_CONNECT}" ]; then
+    _debug "checking if Consul ($CONSUL_CONNECT) is up..."
+    MAX_SECONDS=${CHECK_CONSUL_CONNECT_TIMEOUT:-120}
+    until curl -s --fail --max-time 1 -o /dev/null "http://${CONSUL_CONNECT}/v1/status/leader"; do
+      sleep 1
+      [[ "$SECONDS" -ge "$MAX_SECONDS" ]] && _warning "Consul not responding after $MAX_SECONDS seconds ($CONSUL_CONNECT)" && return 1
+    done
+    _debug "connection ok"
+  fi
 }
 
 check_user(){
