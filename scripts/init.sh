@@ -200,6 +200,7 @@ main(){
   else
     FPM_USER=$1
     FPM_USER_UID=$2
+    export FPM_USER
   fi
 
   check_user
