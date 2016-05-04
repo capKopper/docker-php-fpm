@@ -1,2 +1,7 @@
-build.sh
 Makefile
+
+# Test folder
+test/
+
+# Env files
+*.env

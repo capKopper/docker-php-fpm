@@ -1,9 +1,19 @@
 FROM ubuntu:14.04
 
+ENV CONTAINER_VERSION 2016050401
+
 # Install tools
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get install runit git -y
+RUN apt-get install runit git wget unzip -y
+
+# Install consul-template
+ENV CT_VERSION 0.14.0
+RUN cd /tmp && \
+    wget https://releases.hashicorp.com/consul-template/${CT_VERSION}/consul-template_${CT_VERSION}_linux_amd64.zip && \
+    unzip consul-template_${CT_VERSION}_linux_amd64.zip -d /usr/local/bin && \
+    chmod +x /usr/local/bin/consul-template && \
+    rm -fr consul-template_${CT_VERSION}_linux_amd64.zip
 
 # Install php and dependencies
 ENV PHP_VERSION 5
@@ -22,10 +32,12 @@ ADD files/php-fpm-pool.tpl /tmp/tpl/
 RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
 
 # Add init script
-ADD files/init.sh /init.sh
-RUN chmod u+x /init.sh && \
+ADD scripts/ /scripts/
+RUN chmod u+x /scripts/init.sh && \
     mkdir /init.d
 
+ADD templates/ /consul-template/templates
+
 EXPOSE 9000
-ENTRYPOINT ["/init.sh"]
+ENTRYPOINT ["/scripts/init.sh"]
 CMD []
