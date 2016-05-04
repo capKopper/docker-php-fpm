@@ -36,6 +36,8 @@ ADD scripts/ /scripts/
 RUN chmod u+x /scripts/init.sh && \
     mkdir /init.d
 
+ADD templates/ /consul-template/templates
+
 EXPOSE 9000
 ENTRYPOINT ["/scripts/init.sh"]
 CMD []

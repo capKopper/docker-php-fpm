@@ -1,0 +1,24 @@
+{{ $project := env "PROJECT" }}
+{{ $project_root := key ($project | printf "clients/%s/php_config/root") }}
+{{ $project_admin_prestart_actions := key ($project | printf "clients/%s/php_config/admin_prestart_actions") }}
+{{ $project_client_prestart_actions := key ($project | printf "clients/%s/php_config/client_prestart_actions") }}
+
+#!bin/bash
+
+{{ if $project_admin_prestart_actions }}
+echo "➜ Running project 'admin' pre-start actions..."
+echo "  - actions get from Consul are:"
+echo "    {{ $project_admin_prestart_actions }}"
+echo ""
+{{ $project_admin_prestart_actions }}
+echo ""
+{{ end }}
+
+{{ if $project_client_prestart_actions }}
+echo "➜ Running project 'client' pre-start actions in folder '{{ $project_root }}' by user '{{ env "FPM_USER" }}'..."
+echo "  - actions get from Consul are:"
+echo "    {{ $project_client_prestart_actions }}"
+echo ""
+cd {{ $project_root }}
+su -c "{{ $project_client_prestart_actions }}" {{ env "FPM_USER" }}
+{{ end }}
