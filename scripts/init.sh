@@ -164,6 +164,9 @@ start_runit(){
 main(){
   if [ $# -ne 2 ]; then
     usage
+  else
+    FPM_USER=$1
+    FPM_USER_UID=$2
   fi
 
   check_user $@
