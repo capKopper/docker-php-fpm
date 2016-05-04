@@ -1,6 +1,9 @@
 #!/bin/bash
 #set -eo pipefail
 
+# Required vars
+CONSUL_LOGLEVEL=${CONSUL_LOGLEVEL:-info}
+
 
 # load library
 source /scripts/logging.lib.sh
