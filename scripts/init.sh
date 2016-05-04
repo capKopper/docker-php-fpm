@@ -32,7 +32,6 @@ check_php_fpm_logdir(){
   # """
   # Check if the log dir for php-fpm exists.
   # """
-  local username=$1
   local logdir="/var/log/php5-fpm"
 
   _log "Checking php-fpm log directory presence ..."
@@ -42,7 +41,7 @@ check_php_fpm_logdir(){
     mkdir $logdir
   fi
 
-  chown -R $username:$username $logdir
+  chown -R $FPM_USER:$FPM_USER $logdir
 }
 
 generate_php_fpm_pool(){
@@ -55,7 +54,6 @@ generate_php_fpm_pool(){
   # - PHP_FPM_POST_MAX_SIZE: maximum size of data received from a POST request
   # - PHP_FPM_UPLOAD_MAX_FILESIZE: maximum size of a file to download
   # """
-  local username=$1
   local pool_tpl="/tmp/tpl/php-fpm-pool.tpl"
   local pool_dir="/etc/php5/fpm/pool.d"
   local max_exec_time=${PHP_FPM_MAX_EXECUTION_TIME:-30}
@@ -68,17 +66,17 @@ generate_php_fpm_pool(){
   _debug "removing old pool files"
   rm -fr $pool_dir/*
 
-  _debug "generate '$username' pool from template file ($pool_tpl)"
+  _debug "generate '$FPM_USER' pool from template file ($pool_tpl)"
   _debug "=> max_execution_time set to: $max_exec_time"
   _debug "=> memory_limit set to: $memory_limit"
   _debug "=> post_max_size set to: $post_max_size"
   _debug "=> upload_max_filesize set to: $upload_max_filesize"
-  sed -e 's/{{ CUSTOMER }}/'$username'/g' \
+  sed -e 's/{{ CUSTOMER }}/'$FPM_USER'/g' \
       -e 's/{{ PHP_FPM_MAX_EXECUTION_TIME }}/'$max_exec_time'/g' \
       -e 's/{{ PHP_FPM_MEMORY_LIMIT }}/'$memory_limit'/g' \
       -e 's/{{ PHP_FPM_POST_MAX_SIZE }}/'$post_max_size'/g' \
       -e 's/{{ PHP_FPM_UPLOAD_MAX_FILESIZE }}/'$upload_max_filesize'/g' \
-      $pool_tpl > /etc/php5/fpm/pool.d/$username.conf
+      $pool_tpl > /etc/php5/fpm/pool.d/$FPM_USER.conf
 }
 
 configure_php_cli(){
@@ -106,7 +104,6 @@ configure_runit(){
   # """
   # Configure runit to launch php-fpm service.
   # """
-  local username=$1
   local sv_dir="/etc/sv/php-fpm"
   local sv_run=${sv_dir}"/run"
 
@@ -117,7 +114,7 @@ configure_runit(){
     mkdir $sv_dir
     cat > $sv_run << EOF
 #!/bin/bash
-exec chpst -u $username /usr/sbin/php5-fpm 2>&1
+exec chpst -u $FPM_USER /usr/sbin/php5-fpm 2>&1
 EOF
     chmod u+x $sv_run
   fi
@@ -169,10 +166,10 @@ main(){
   fi
 
   check_user
-  check_php_fpm_logdir $1
-  generate_php_fpm_pool $1
+  check_php_fpm_logdir
+  generate_php_fpm_pool
   configure_php_cli
-  configure_runit $1
+  configure_runit
   activate_service "php-fpm"
   run_pre-scripts "/init.d/pre-*.sh" $@
   start_runit
