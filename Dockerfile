@@ -1,5 +1,7 @@
 FROM ubuntu:14.04
 
+ENV CONTAINER_VERSION 2016050401
+
 # Install tools
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
