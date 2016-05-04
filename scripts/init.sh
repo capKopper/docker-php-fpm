@@ -18,15 +18,14 @@ check_user(){
   # Check if the given user is present.
   # If not add it.
   # """"
-  local username=$1
-  local uid=$2
-
-  _log "Checking that user '$username' exists ..."
-  if [ $(grep -c $username /etc/passwd) == "0" ]; then
-    _debug "create user '$username'"
-    useradd -m -u $uid -s /bin/bash $1
+  _log "Checking that '$FPM_USER' user exists..."
+  if [ $(grep -c $FPM_USER /etc/passwd) == "0" ]; then
+    _debug "create user '$FPM_USER' with uid '$FPM_USER_UID'"
+    useradd -m -u $FPM_USER_UID -s /bin/bash $FPM_USER
+  else
+    _debug "user exists"
   fi
-  chown $1:$1 /home/$1 && chmod 750 /home/$1
+  chown $FPM_USER:$FPM_USER /home/$FPM_USER && chmod 750 /home/$FPM_USER
 }
 
 check_php_fpm_logdir(){
@@ -169,7 +168,7 @@ main(){
     FPM_USER_UID=$2
   fi
 
-  check_user $@
+  check_user
   check_php_fpm_logdir $1
   generate_php_fpm_pool $1
   configure_php_cli
