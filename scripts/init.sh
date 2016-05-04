@@ -70,7 +70,7 @@ check_php_fpm_logdir(){
   # """
   local logdir="/var/log/php5-fpm"
 
-  _log "Checking php-fpm log directory presence ..."
+  _log "Checking if php-fpm log directory exists..."
 
   if [ ! -d $logdir ]; then
     _debug "create directory '$logdir'"
@@ -99,7 +99,7 @@ generate_php_fpm_pool(){
 
   _log "Generate php-fpm customer pool ..."
 
-  _debug "removing old pool files"
+  _debug "remove old files in the pool dir '$pool_dir'"
   rm -fr $pool_dir/*
 
   _debug "generate '$FPM_USER' pool from template file ($pool_tpl)"
@@ -143,7 +143,7 @@ configure_runit(){
   local sv_dir="/etc/sv/php-fpm"
   local sv_run=${sv_dir}"/run"
 
-  _log "Configure runit to launch php-fpm ..."
+  _log "Configure runit to launch php-fpm..."
 
   if [ ! -d $sv_dir ]; then
     _debug "add php-fpm './run' script"
@@ -163,7 +163,7 @@ activate_service(){
   local service=$1
   local sv_dir="/etc/sv/$service"
 
-  _log "Activating $1 service ..."
+  _log "Activating $1 service..."
   if [ ! -h /etc/service/$service ]; then
     ln -s $sv_dir /etc/service
   fi
